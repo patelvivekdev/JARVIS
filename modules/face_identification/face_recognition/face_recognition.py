@@ -3,18 +3,26 @@ import cv2
 import tensorflow as tf
 import numpy as np
 import pandas as pd
-from PIL import Image
 
 
-class FaceRecognition():
+def find_cosine_similarity(source_representation, test_representation):
+    """Find CosinesSimilarity"""
+    a = np.matmul(np.transpose(source_representation), test_representation)
+    b = np.sum(np.multiply(source_representation, source_representation))
+    c = np.sum(np.multiply(test_representation, test_representation))
+
+    return 1 - (a / (np.sqrt(b) * np.sqrt(c)))
+
+
+class FaceRecognition:
     def __init__(self, data_path, img_height, img_width, model_path, caffemodel_path, prototxt_path):
         """
         Info : Face_Recognition class
 
         :param data_path : str (example: 'Path_to_Data')
-        :param img_heigth: int (example: 224)
+        :param img_height: int (example: 224)
         :param img_width: int (example: 224)
-        :parma model_path: str (example: 'Path_To_Tensorflow_model')
+        :param model_path: str (example: 'Path_To_Tensorflow_model')
         :param caffemodel_path : str (example: 'path_to_caffe_model')
         :param prototxt: str (example:'path_to_prototxt')
 
@@ -49,14 +57,6 @@ class FaceRecognition():
         img = tf.keras.applications.imagenet_utils.preprocess_input(img)
 
         return img
-
-    def findCosineSimilarity(self, source_representation, test_representation):
-        """Find CosinesSimilarity"""
-        a = np.matmul(np.transpose(source_representation), test_representation)
-        b = np.sum(np.multiply(source_representation, source_representation))
-        c = np.sum(np.multiply(test_representation, test_representation))
-
-        return 1 - (a / (np.sqrt(b) * np.sqrt(c)))
 
     def load_detector(self):
         """
@@ -105,7 +105,7 @@ class FaceRecognition():
         cap = cv2.VideoCapture(
             0, cv2.CAP_DSHOW
         )
-        print("Start Recogintion.....")
+        print("Start Recognition.....")
         while True:
             ret, img = cap.read()
             base_img = img.copy()
@@ -130,7 +130,7 @@ class FaceRecognition():
                     bottom = int(instance["bottom"] * 300)
                     right = int(instance["right"] * 300)
                     top = int(instance["top"] * 300)
-                    # drow rectangle to main image
+                    # draw rectangle to main image
                     cv2.rectangle(
                         img,
                         (int(left * aspect_ratio_x), int(top * aspect_ratio_y)),
@@ -139,16 +139,12 @@ class FaceRecognition():
                         (255, 0, 0),
                         2,
                     )
-                    confidence_score = str(
-                        round(100 * instance["confidence"], 2)) + " %"
                     detected_face = base_img[
-                        int(top * aspect_ratio_y)
-                        - 100: int(bottom * aspect_ratio_y)
-                        + 100,
-                        int(left * aspect_ratio_x)
-                        - 100: int(right * aspect_ratio_x)
-                        + 100,
-                    ]
+                                    int(top * aspect_ratio_y)
+                                    - 100: int(bottom * aspect_ratio_y) + 100,
+                                    int(left * aspect_ratio_x)
+                                    - 100: int(right * aspect_ratio_x) + 100,
+                                    ]
                     if len(detected_face) != 0:
                         try:
                             detected_face = cv2.resize(
@@ -161,11 +157,11 @@ class FaceRecognition():
                             img_pixels = np.expand_dims(img_pixels, axis=0)
                             img_pixels /= 255
                             captured_representation = model.predict(img_pixels)[
-                                0, :]
-                            for i in all_people_faces:
-                                person_name = i
-                                representation = all_people_faces[i]
-                                similarity = self.findCosineSimilarity(
+                                                      0, :]
+                            for person in all_people_faces:
+                                person_name = person
+                                representation = all_people_faces[person]
+                                similarity = find_cosine_similarity(
                                     representation, captured_representation
                                 )
                                 if similarity < 0.30:
@@ -188,7 +184,7 @@ class FaceRecognition():
                                     2,
                                 )
                         except Exception as e:
-                            pass
+                            print(e)
                     else:
                         pass
                 cv2.imshow("img", img)
@@ -209,5 +205,9 @@ class FaceRecognition():
 
 
 if __name__ == '__main__':
-    obj = FaceRecognition()
+    obj = FaceRecognition(data_path='modules/face_identification/data', img_width=224, img_height=224,
+                          model_path='modules/face_identification/model/model.h5',
+                          caffemodel_path='modules/face_identification/model/res10_300x300_ssd_iter_140000.caffemodel',
+                          prototxt_path='modules/face_identification/model/deploy.prototxt'
+                          )
     obj.predict_person()
