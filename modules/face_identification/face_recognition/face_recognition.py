@@ -1,0 +1,213 @@
+import os
+import cv2
+import tensorflow as tf
+import numpy as np
+import pandas as pd
+from PIL import Image
+
+
+class FaceRecognition():
+    def __init__(self, data_path, img_height, img_width, model_path, caffemodel_path, prototxt_path):
+        """
+        Info : Face_Recognition class
+
+        :param data_path : str (example: 'Path_to_Data')
+        :param img_heigth: int (example: 224)
+        :param img_width: int (example: 224)
+        :parma model_path: str (example: 'Path_To_Tensorflow_model')
+        :param caffemodel_path : str (example: 'path_to_caffe_model')
+        :param prototxt: str (example:'path_to_prototxt')
+
+        :return: final person name
+        """
+        self.img_height = img_height
+        self.img_width = img_width
+        self.model_path = model_path
+        self.caffemodel_path = caffemodel_path
+        self.prototxt_path = prototxt_path
+        self.data_path = data_path
+
+    def create_model(self):
+        """
+        Info : Load Model with tf.keras load_model function.
+        :return : Tensorflow model
+        """
+        model = tf.keras.models.load_model(self.model_path)
+        print("Model Loaded...")
+
+        return model
+
+    def preprocess_image(self, image_path):
+        """
+        Info : Loads image from path and resizes it
+        :return : resize image
+        """
+        img = tf.keras.preprocessing.image.load_img(
+            image_path, target_size=(self.img_height, self.img_width))
+        img = tf.keras.preprocessing.image.img_to_array(img)
+        img = np.expand_dims(img, axis=0)
+        img = tf.keras.applications.imagenet_utils.preprocess_input(img)
+
+        return img
+
+    def findCosineSimilarity(self, source_representation, test_representation):
+        """Find CosinesSimilarity"""
+        a = np.matmul(np.transpose(source_representation), test_representation)
+        b = np.sum(np.multiply(source_representation, source_representation))
+        c = np.sum(np.multiply(test_representation, test_representation))
+
+        return 1 - (a / (np.sqrt(b) * np.sqrt(c)))
+
+    def load_detector(self):
+        """
+        Info :  Load caffe model for face detection.
+        """
+        prototxt = self.prototxt_path
+        caff_model = self.caffemodel_path
+        detector = cv2.dnn.readNetFromCaffe(prototxt, caff_model)
+
+        return detector
+
+    def detect_face(self, img):
+        """
+        Info : Detect face from image.
+        """
+        original_size = img.shape
+        target_size = (300, 300)
+        img = cv2.resize(img, target_size)  # Resize to target_size
+        aspect_ratio_x = original_size[1] / target_size[1]
+        aspect_ratio_y = original_size[0] / target_size[0]
+        imageBlob = cv2.dnn.blobFromImage(image=img)
+        detector = self.load_detector()
+        detector.setInput(imageBlob)
+        detections = detector.forward()
+
+        return detections, aspect_ratio_x, aspect_ratio_y
+
+    def predict_person(self):
+        """Predict on webcam and return name of detected person if it's already known """
+
+        found = 0
+        final_name = ""
+
+        model = self.create_model()
+
+        mypath = self.data_path
+        all_people_faces = dict()
+        for file in os.listdir(mypath):
+            person_face = file.split(".")[0]
+            all_people_faces[person_face] = model.predict(
+                self.preprocess_image(f'{mypath}/{person_face}.jpg')
+            )[0, :]
+
+        print("Face representations retrieved successfully")
+
+        cap = cv2.VideoCapture(
+            0, cv2.CAP_DSHOW
+        )
+        print("Start Recogintion.....")
+        while True:
+            ret, img = cap.read()
+            base_img = img.copy()
+            detections, aspect_ratio_x, aspect_ratio_y = self.detect_face(img)
+            detections_df = pd.DataFrame(
+                detections[0][0],
+                columns=[
+                    "img_id",
+                    "is_face",
+                    "confidence",
+                    "left",
+                    "top",
+                    "right",
+                    "bottom",
+                ],
+            )
+            detections_df = detections_df[detections_df["is_face"] == 1]
+            detections_df = detections_df[detections_df["confidence"] >= 0.95]
+            if len(detections_df) != 0:
+                for i, instance in detections_df.iterrows():
+                    left = int(instance["left"] * 300)
+                    bottom = int(instance["bottom"] * 300)
+                    right = int(instance["right"] * 300)
+                    top = int(instance["top"] * 300)
+                    # drow rectangle to main image
+                    cv2.rectangle(
+                        img,
+                        (int(left * aspect_ratio_x), int(top * aspect_ratio_y)),
+                        (int(right * aspect_ratio_x),
+                         int(bottom * aspect_ratio_y)),
+                        (255, 0, 0),
+                        2,
+                    )
+                    confidence_score = str(
+                        round(100 * instance["confidence"], 2)) + " %"
+                    detected_face = base_img[
+                        int(top * aspect_ratio_y)
+                        - 100: int(bottom * aspect_ratio_y)
+                        + 100,
+                        int(left * aspect_ratio_x)
+                        - 100: int(right * aspect_ratio_x)
+                        + 100,
+                    ]
+                    if len(detected_face) != 0:
+                        try:
+                            detected_face = cv2.resize(
+                                detected_face, (self.img_height,
+                                                self.img_width)
+                            )
+                            img_pixels = tf.keras.preprocessing.image.img_to_array(
+                                detected_face
+                            )
+                            img_pixels = np.expand_dims(img_pixels, axis=0)
+                            img_pixels /= 255
+                            captured_representation = model.predict(img_pixels)[
+                                0, :]
+                            for i in all_people_faces:
+                                person_name = i
+                                representation = all_people_faces[i]
+                                similarity = self.findCosineSimilarity(
+                                    representation, captured_representation
+                                )
+                                if similarity < 0.30:
+                                    print(similarity)
+                                    final_name = person_name[5:]
+                                    found = 1
+                                    break
+                            if found == 0:
+                                final_name = "unknown"
+                                cv2.putText(
+                                    img,
+                                    "unknown",
+                                    (
+                                        int((left * aspect_ratio_x) + 15),
+                                        int((top * aspect_ratio_y) - 12),
+                                    ),
+                                    cv2.FONT_HERSHEY_SIMPLEX,
+                                    1,
+                                    (255, 0, 0),
+                                    2,
+                                )
+                        except Exception as e:
+                            pass
+                    else:
+                        pass
+                cv2.imshow("img", img)
+                if "vivek" in final_name:
+                    print("welcome vivek")
+                    break
+                if "smit" in final_name:
+                    print("welcome smit")
+                    break
+                if cv2.waitKey(1) == 13:  # 13 is the Enter Key
+                    break
+            else:
+                pass
+        cap.release()
+        cv2.destroyAllWindows()
+
+        return final_name
+
+
+if __name__ == '__main__':
+    obj = FaceRecognition()
+    obj.predict_person()
