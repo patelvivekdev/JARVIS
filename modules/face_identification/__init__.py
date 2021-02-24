@@ -1,11 +1,11 @@
 import sys
 
 try:
-    from face_detection import face_detection
-    from face_recognition import face_recognition
+    from JARVIS.modules.face_identification.face_detection import face_detection
+    from JARVIS.modules.face_identification.face_recognition import face_recognition
 except Exception as e:
-    from jarvis.modules.face_identification.face_detection import face_detection
-    from jarvis.modules.face_identification.face_recognition import face_recognition
+    from JARVIS_AI.JARVIS.modules.face_identification.face_detection import face_detection
+    from JARVIS_AI.JARVIS.modules.face_identification.face_recognition import face_recognition
 
 
 class FaceRecognition(object):
@@ -52,5 +52,3 @@ class FaceRecognition(object):
 
 if __name__ == '__main__':
     obj = FaceRecognition()
-    obj.face_detetion()
-    obj.face_recognition()
