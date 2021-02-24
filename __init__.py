@@ -4,11 +4,29 @@ import os
 # Import Custom module
 from JARVIS.modules.face_identification import FaceRecognition
 from JARVIS.modules.weather import Weather
+from JARVIS.modules.date import Date
+from JARVIS.modules.time import Time
 
 
 class Jarvis:
     def _init__(self):
         pass
+
+    def tell_me_date(self):
+        """
+        Just return date as string
+        :return: str/Bool
+            date if success, False if fail
+        """
+        return Date.date()
+
+    def tell_me_time(self):
+        """
+        This function will return time
+        :return: str/Bool
+            Time if success, False if fail
+        """
+        return Time.time()
 
     def face_recognition(self):
         pass
@@ -28,6 +46,18 @@ class Jarvis:
             print(e)
             res = False
         return res
+
+    def setup(self):
+        """
+        Method to define configuration related to assistant
+        :return: Bool
+            True if setup done
+            False if setup cancel or interrupt
+        """
+        obj_setup = setup_assistant.Setup()
+        response = obj_setup.setup_assistant()
+        del obj_setup
+        return response
 
 
 if __name__ == '__main__':
