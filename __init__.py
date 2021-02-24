@@ -6,6 +6,7 @@ from JARVIS.modules.face_identification import FaceRecognition
 from JARVIS.modules.weather import Weather
 from JARVIS.modules.date import Date
 from JARVIS.modules.time import Time
+from JARVIS.modules.setup import Setup
 
 
 class Jarvis:
@@ -54,7 +55,7 @@ class Jarvis:
             True if setup done
             False if setup cancel or interrupt
         """
-        obj_setup = setup_assistant.Setup()
+        obj_setup = Setup()
         response = obj_setup.setup_assistant()
         del obj_setup
         return response

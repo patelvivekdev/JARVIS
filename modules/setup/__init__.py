@@ -12,12 +12,12 @@ class Setup:
         config.add_section('default')
 
         bot_name = str(input("Enter Bot name (default=jarvis): ") or "jarvis")
-        user_name = str(input("Enter User name (default=Vivek): ") or "Vivek")
+        user_name = str(input("Enter User name (default=vivek): ") or "vivek")
 
         config[default]['bot_name'] = bot_name
         config[default]['user_name'] = user_name
 
-        with open('config/config.ini', 'w') as configfile:
+        with open('./JARVIS/config/config.ini', 'w') as configfile:
             config.write(configfile)
 
         print("Setup Done")
@@ -25,7 +25,7 @@ class Setup:
 
     def setup_assistant(self):
         if not os.path.exists('config'):
-            os.makedirs('config')
+            os.makedirs('./JARVIS/config')
         config = configparser.ConfigParser()
 
         if os.path.exists('config'):
