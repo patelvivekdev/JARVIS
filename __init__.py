@@ -53,7 +53,7 @@ class Jarvis:
             r = sr.Recognizer()
             with sr.Microphone() as source:
                 greeting = random.choice(["Hello", "Hi"])
-                msg = greeting + ' ' + user_name + ',' + ' How may I help you?'
+                msg = f'{greeting} {user_name} , How may I help you?'
                 print(msg)
                 self.text2speech(msg)
                 r.pause_threshold = 1
@@ -61,7 +61,7 @@ class Jarvis:
                 audio = r.listen(source)
             try:
                 command = r.recognize_google(audio, language=lang).lower()
-                print('You said: ' + command + '\n')
+                print(f'You said: {command} \n')
             except sr.UnknownValueError:
                 print('....')
                 command = self.mic_input()
@@ -131,7 +131,7 @@ class Jarvis:
             if no error then exit from program, False if Fail
         """
         try:
-            pass
+            sys.exit()
         except Exception as e:
             print(e)
             return False
