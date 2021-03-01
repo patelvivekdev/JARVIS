@@ -134,6 +134,7 @@ class Jarvis:
             if no error then exit from program, False if Fail
         """
         try:
+            self.text2speech('Good bye. Have a nice day')
             sys.exit()
         except Exception as e:
             print(e)
