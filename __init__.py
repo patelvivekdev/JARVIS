@@ -4,6 +4,8 @@ import sys
 import configparser
 import random
 import speech_recognition as sr
+import pyaudio
+import pyttsx3
 
 # Import Custom module
 from JARVIS.modules.face_identification import FaceRecognition
@@ -46,7 +48,7 @@ class Jarvis:
             user's voice input as text if true/ false if fail
         """
         config = configparser.ConfigParser()
-        config.read('.JARVIS/config/config.ini')
+        config.read('./JARVIS/config/config.ini')
         user_name = config['default']['user_name']
 
         try:
@@ -70,18 +72,20 @@ class Jarvis:
             print(e)
             return False
 
-    def text2speech(self, text, lang='en'):
+    def text2speech(self, text):
         """
         Convert any text to speech
         :param text: str
             text (String)
-        :param lang: str
-            default 'en'
         :return: Bool
             True / False (Play sound if True otherwise write exception to log and return False)
         """
         try:
-            pass
+            engine = pyttsx3.init()
+            voices = engine.getProperty("voices")
+            engine.setProperty("voice", voices[1].id)
+            engine.say(text)
+            engine.runAndWait()
             return True
         except Exception as e:
             mytext = "Sorry I couldn't understand, or not implemented to handle this input"

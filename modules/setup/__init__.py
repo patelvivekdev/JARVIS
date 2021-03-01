@@ -24,11 +24,11 @@ class Setup:
         return True
 
     def setup_assistant(self):
-        if not os.path.exists('config'):
+        if not os.path.exists('./JARVIS/config'):
             os.makedirs('./JARVIS/config')
         config = configparser.ConfigParser()
 
-        if os.path.exists('config'):
+        if os.path.exists('./JARVIS/config'):
             sure = str(
                 input("Your current configuration will be deleted, are you sure (y/n): ") or "n")
             if sure == "n":
