@@ -35,7 +35,6 @@ class WakeWord:
             bot_name = config['default']['bot_name']
         except Exception as e:
             raise DefaultFileNotFound
-
         try:
             r = sr.Recognizer()
             with sr.Microphone() as source:
@@ -44,12 +43,11 @@ class WakeWord:
                 r.adjust_for_ambient_noise(source, duration=1)
                 audio = r.listen(source)
                 command = r.recognize_google(audio, language=lang).lower()
-
                 if re.search(bot_name, command):
                     print("Waking up...")
                     return True, command
                 else:
-                    return False, False
+                    return False, command
         except Exception:
             return False, None
 

@@ -29,8 +29,7 @@ class Jarvis:
             status, command
         """
         try:
-            status, command = WakeWord(lang=lang)
-            print(status, command)
+            status, command = WakeWord.Wake_word(self, lang=lang)
         except DefaultFileNotFound as e:
             print(
                 "Unable to locate configuraton file './JARVIS/config/config.ini'. Creating NOW...")
