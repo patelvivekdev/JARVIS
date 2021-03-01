@@ -1,0 +1,8 @@
+speech_recognition
+pyaudio
+pyttsx3
+tensorflow
+pandas
+numpy
+wikipedia
+pyautogui
