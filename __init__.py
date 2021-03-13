@@ -2,10 +2,12 @@
 import os
 import sys
 import configparser
+import datetime
 import random
 import speech_recognition as sr
 import pyaudio
 import pyttsx3
+import psutil
 
 # Import Custom module
 from JARVIS.modules.face_identification import FaceRecognition
@@ -48,21 +50,14 @@ class Jarvis:
         :return: str/Bool
             user's voice input as text if true/ false if fail
         """
-        config = configparser.ConfigParser()
-        config.read('./JARVIS/config/config.ini')
-        user_name = config['default']['user_name']
-
         try:
             r = sr.Recognizer()
             with sr.Microphone() as source:
-                greeting = random.choice(["Hello", "Hi"])
-                msg = f'{greeting} {user_name} , How may I help you?'
-                print(msg)
-                self.text2speech(msg)
+                print('listening.....')
                 r.pause_threshold = 1
-                r.adjust_for_ambient_noise(source, duration=1)
                 audio = r.listen(source)
             try:
+                print('Recognizing.....')
                 command = r.recognize_google(audio, language=lang).lower()
                 print(f'You said: {command} \n')
             except sr.UnknownValueError:
@@ -93,6 +88,52 @@ class Jarvis:
             print(mytext)
             print(e)
             return False
+
+    def cpu(self):
+        """
+        Give current CPU and Buttery percent
+        :return: str/bool
+        """
+        try:
+            usage = str(psutil.cpu_percent())
+            print(f"CPU is at {usage}")
+            self.text2speech("CPU is at " + usage)
+            battery = psutil.sensors_battery()
+            print("Battery is at", battery.percent)
+            self.text2speech("Battery is at")
+            self.text2speech(battery.percent)
+        except Exception as e:
+            print(e)
+            return False
+
+    def greeting(self):
+
+        config = configparser.ConfigParser()
+        config.read('./JARVIS/config/config.ini')
+        user_name = config['default']['user_name']
+
+        flag = False
+        hour = datetime.datetime.now().hour
+        if hour >= 6 and hour < 12:
+            print(f"Good Morning! {user_name}")
+            self.text2speech(f"Good Morning! {user_name}")
+            flag = True
+        elif hour >= 12 and hour < 18:
+            print(f"Good Afternoon! {user_name}")
+            self.text2speech(f"Good Afternoon! {user_name}")
+            flag = True
+        elif hour >= 18 and hour < 24:
+            print(f"Good Evening! {user_name}")
+            self.text2speech(f"Good Evening! {user_name}")
+            flag = True
+        else:
+            print("it's time to bad sir ! Good night")
+            self.text2speech("it's time to bad sir ! Good night")
+            flag = False
+        if flag:
+            print("checking functionality")
+            self.text2speech("checking functionality")
+            self.cpu()
 
     def tell_me_date(self):
         """
@@ -129,7 +170,7 @@ class Jarvis:
             res = False
         return res
 
-    def launch_any_app(self, path_of_app='C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'):
+    def launch_any_app(self, path_of_app='C:\Program Files\Mozilla Firefox\firefox.exe'):
         """
         Launch any windows application according to application path
         :param path_of_app: str
