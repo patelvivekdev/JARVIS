@@ -40,7 +40,6 @@ class WakeWord:
             with sr.Microphone() as source:
                 print("Background listening")
                 r.pause_threshold = 1
-                r.adjust_for_ambient_noise(source, duration=1)
                 audio = r.listen(source)
                 command = r.recognize_google(audio, language=lang).lower()
                 if re.search(bot_name, command):
