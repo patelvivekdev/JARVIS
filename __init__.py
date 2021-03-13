@@ -14,6 +14,8 @@ from JARVIS.modules.date import Date
 from JARVIS.modules.time import Time
 from JARVIS.modules.setup import Setup
 from JARVIS.modules.wake_word import WakeWord, DefaultFileNotFound
+from JARVIS.modules.wikipedia import Wikipedia
+from JARVIS.modules.open_app import OpenApp
 
 
 class Jarvis:
@@ -127,6 +129,16 @@ class Jarvis:
             res = False
         return res
 
+    def launch_any_app(self, path_of_app='C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'):
+        """
+        Launch any windows application according to application path
+        :param path_of_app: str
+            path of exe
+        :return: Bool
+            True if success and open the application, False if fail
+        """
+        return OpenApp.launch_app(path_of_app)
+
     def shutdown(self):
         """
         Shutdown the Jarvis API, exit from program
@@ -151,6 +163,19 @@ class Jarvis:
         response = obj_setup.setup_assistant()
         del obj_setup
         return response
+
+    def tell_me(self, topic='India', sentences=1):
+        """
+        TIt tells about anything from wikipedia in summary
+        :param topic: str
+            any string is valid options
+        :param sentences: int
+            number of sentence
+        :return: str
+            Summary of topic
+        """
+        obj = Wikipedia()
+        return obj.tell_me_about(topic, sentences)
 
 
 if __name__ == '__main__':
