@@ -151,8 +151,32 @@ class Jarvis:
         """
         return Time.time()
 
-    def face_recognition(self):
-        pass
+    def data_create(self, dataset_path=r'JARVIS\modules\face_identification\data',
+                    class_name='demo',
+                    no_of_samples=10,
+                    width=300,
+                    height=300,
+                    caffemodel_path=r'JARVIS\modules\face_identification\model\res10_300x300_ssd_iter_140000.caffemodel',
+                    prototxt_path=r'JARVIS\modules\face_identification\model\deploy.prototxt'):
+
+        obj = FaceRecognition()
+
+        obj.face_detetion(dataset_path, class_name, no_of_samples,
+                          width, height, caffemodel_path, prototxt_path)
+
+    def detect_person(self, data_path=r'JARVIS\modules\face_identification\data',
+                      img_height=224,
+                      img_width=224,
+                      model_path=r'JARVIS\modules\face_identification\model\model.h5',
+                      caffemodel_path=r'JARVIS\modules\face_identification\model\res10_300x300_ssd_iter_140000.caffemodel',
+                      prototxt_path=r'JARVIS\modules\face_identification\model\deploy.prototxt'):
+
+        obj = FaceRecognition()
+
+        user_name = obj.face_recognition(
+            data_path, img_height, img_width, model_path, caffemodel_path, prototxt_path)
+
+        return user_name
 
     def weather_info(self, city='Vadodara'):
         """
@@ -170,7 +194,7 @@ class Jarvis:
             res = False
         return res
 
-    def launch_any_app(self, path_of_app='C:\Program Files\Mozilla Firefox\firefox.exe'):
+    def launch_any_app(self, path_of_app=r'C:\Program Files\Mozilla Firefox\firefox.exe'):
         """
         Launch any windows application according to application path
         :param path_of_app: str

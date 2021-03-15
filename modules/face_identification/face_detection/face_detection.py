@@ -58,10 +58,11 @@ class FaceDetection:
         Info : Show and save detected person images.
         """
         print(
-            f'Generated {self.dataset_path}/face_{self.class_name}{count}.jpg')
+            f'Generated {self.dataset_path}\\face_{self.class_name}{count}.jpg')
         img = cv2.resize(img, (self.width, self.height))
         cv2.imshow('img', img)
-        cv2.imwrite(f"{self.dataset_path}/face_{self.class_name}{str(count)}.jpg", img)
+        cv2.imwrite(
+            f"{self.dataset_path}\\face_{self.class_name}{str(count)}.jpg", img)
         count += 1
         return count
 
@@ -76,7 +77,7 @@ class FaceDetection:
 
         if not os.path.exists(self.dataset_path):
             os.makedirs(self.dataset_path)
-            
+
         while True:
             _, img = cap.read()
             base_img = img.copy()

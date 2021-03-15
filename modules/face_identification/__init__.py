@@ -47,7 +47,9 @@ class FaceRecognition(object):
             data_path, img_height, img_width, model_path, caffemodel_path, prototxt_path
         )
 
-        obj.predict_person()
+        person_name = obj.predict_person()
+
+        return person_name
 
 
 if __name__ == '__main__':

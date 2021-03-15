@@ -140,11 +140,11 @@ class FaceRecognition:
                         2,
                     )
                     detected_face = base_img[
-                                    int(top * aspect_ratio_y)
-                                    - 100: int(bottom * aspect_ratio_y) + 100,
-                                    int(left * aspect_ratio_x)
-                                    - 100: int(right * aspect_ratio_x) + 100,
-                                    ]
+                        int(top * aspect_ratio_y)
+                        - 100: int(bottom * aspect_ratio_y) + 100,
+                        int(left * aspect_ratio_x)
+                        - 100: int(right * aspect_ratio_x) + 100,
+                    ]
                     if len(detected_face) != 0:
                         try:
                             detected_face = cv2.resize(
@@ -157,7 +157,7 @@ class FaceRecognition:
                             img_pixels = np.expand_dims(img_pixels, axis=0)
                             img_pixels /= 255
                             captured_representation = model.predict(img_pixels)[
-                                                      0, :]
+                                0, :]
                             for person in all_people_faces:
                                 person_name = person
                                 representation = all_people_faces[person]
@@ -189,10 +189,10 @@ class FaceRecognition:
                         pass
                 cv2.imshow("img", img)
                 if "vivek" in final_name:
-                    print("welcome vivek")
+                    final_name = 'vivek'
                     break
                 if "smit" in final_name:
-                    print("welcome smit")
+                    final_name = 'smit'
                     break
                 if cv2.waitKey(1) == 13:  # 13 is the Enter Key
                     break
