@@ -112,28 +112,35 @@ class Jarvis:
         config.read('./JARVIS/config/config.ini')
         user_name = config['default']['user_name']
 
-        flag = False
-        hour = datetime.datetime.now().hour
-        if hour >= 6 and hour < 12:
-            print(f"Good Morning! {user_name}")
-            self.text2speech(f"Good Morning! {user_name}")
-            flag = True
-        elif hour >= 12 and hour < 18:
-            print(f"Good Afternoon! {user_name}")
-            self.text2speech(f"Good Afternoon! {user_name}")
-            flag = True
-        elif hour >= 18 and hour < 24:
-            print(f"Good Evening! {user_name}")
-            self.text2speech(f"Good Evening! {user_name}")
-            flag = True
-        else:
-            print("it's time to bad sir ! Good night")
-            self.text2speech("it's time to bad sir ! Good night")
+        username = self.detect_person()
+
+        if user_name == username:
             flag = False
-        if flag:
-            print("checking functionality")
-            self.text2speech("checking functionality")
-            self.cpu()
+            hour = datetime.datetime.now().hour
+            if hour >= 6 and hour < 12:
+                print(f"Good Morning! {user_name}")
+                self.text2speech(f"Good Morning! {user_name}")
+                flag = True
+            elif hour >= 12 and hour < 18:
+                print(f"Good Afternoon! {user_name}")
+                self.text2speech(f"Good Afternoon! {user_name}")
+                flag = True
+            elif hour >= 18 and hour < 24:
+                print(f"Good Evening! {user_name}")
+                self.text2speech(f"Good Evening! {user_name}")
+                flag = True
+            else:
+                print("it's time to bad sir ! Good night")
+                self.text2speech("it's time to bad sir ! Good night")
+                flag = False
+            if flag:
+                print("checking functionality")
+                self.text2speech("checking functionality")
+                self.cpu()
+        else:
+            print('user unauthenticated')
+            self.text2speech('user unauthenticated')
+            sys.exit()
 
     def tell_me_date(self):
         """
