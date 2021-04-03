@@ -10,7 +10,7 @@ import pyttsx3
 import psutil
 
 # Import Custom module
-from JARVIS.modules.face_identification import FaceRecognition
+from JARVIS.modules.face_identification import FaceIdentificaion
 from JARVIS.modules.weather import Weather
 from JARVIS.modules.date import Date
 from JARVIS.modules.time import Time
@@ -166,7 +166,7 @@ class Jarvis:
                     caffemodel_path=r'JARVIS\modules\face_identification\model\res10_300x300_ssd_iter_140000.caffemodel',
                     prototxt_path=r'JARVIS\modules\face_identification\model\deploy.prototxt'):
 
-        obj = FaceRecognition()
+        obj = FaceIdentificaion()
 
         obj.face_detetion(dataset_path, class_name, no_of_samples,
                           width, height, caffemodel_path, prototxt_path)
@@ -178,7 +178,7 @@ class Jarvis:
                       caffemodel_path=r'JARVIS\modules\face_identification\model\res10_300x300_ssd_iter_140000.caffemodel',
                       prototxt_path=r'JARVIS\modules\face_identification\model\deploy.prototxt'):
 
-        obj = FaceRecognition()
+        obj = FaceIdentificaion()
 
         user_name = obj.face_recognition(
             data_path, img_height, img_width, model_path, caffemodel_path, prototxt_path)

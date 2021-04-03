@@ -1,23 +1,25 @@
-import sys
-
-try:
-    from JARVIS.modules.face_identification.face_detection import face_detection
-    from JARVIS.modules.face_identification.face_recognition import face_recognition
-except Exception as e:
-    from JARVIS_AI.JARVIS.modules.face_identification.face_detection import face_detection
-    from JARVIS_AI.JARVIS.modules.face_identification.face_recognition import face_recognition
+from JARVIS.modules.face_identification.face_detection import face_detection
+from JARVIS.modules.face_identification.face_recognition import face_recognition
 
 
-class FaceRecognition(object):
+class FaceIdentificaion():
+    """Face Identification class."""
+
     def __init__(self):
         pass
 
-    def face_detetion(self, dataset_path, class_name, no_of_samples, width, height, caffemodel_path, prototxt_path):
+    def face_detetion(self, dataset_path=r'JARVIS\modules\face_identification\data',
+                      class_name='demo',
+                      no_of_samples=10,
+                      width=300,
+                      height=300,
+                      caffemodel_path=r'JARVIS\modules\face_identification\model\res10_300x300_ssd_iter_140000.caffemodel',
+                      prototxt_path=r'JARVIS\modules\face_identification\model\deploy.prototxt'):
         """
         Info : Dataset Create by face detection with OpenCV SSD.
 
         :param dataset_path: str (example: 'path_of_dataset')
-        :param class_name: str (example: 'name_of_folder')
+        :param class_name: str (example: 'name_of_user')
         :param no_of_samples: int (example: 10)
         :param width: int (example: 300)
         :param height: int (example: 300)
@@ -29,7 +31,12 @@ class FaceRecognition(object):
             dataset_path, class_name, no_of_samples, width, height, caffemodel_path, prototxt_path)
         obj.detect()
 
-    def face_recognition(self, data_path, img_height, img_width, model_path, caffemodel_path, prototxt_path):
+    def face_recognition(self, data_path=r'JARVIS\modules\face_identification\data',
+                         img_height=224,
+                         img_width=224,
+                         model_path=r'JARVIS\modules\face_identification\model\model.h5',
+                         caffemodel_path=r'JARVIS\modules\face_identification\model\res10_300x300_ssd_iter_140000.caffemodel',
+                         prototxt_path=r'JARVIS\modules\face_identification\model\deploy.prototxt'):
         """
         Info : Face_Recognition class
 
@@ -53,4 +60,4 @@ class FaceRecognition(object):
 
 
 if __name__ == '__main__':
-    obj = FaceRecognition()
+    obj = FaceIdentificaion()
