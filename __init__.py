@@ -26,9 +26,11 @@ class Jarvis:
 
     def hot_word_detect(self, lang='en'):
         """
-        Hot word (wake word / background listen) detection
+        Hot word (wake word / background listen) detection.
+
         :param lang: str
             default 'en'
+
         :return: Bool, str
             status, command
         """
@@ -44,9 +46,11 @@ class Jarvis:
 
     def mic_input(self, lang='en'):
         """
-        Fetch input from mic
+        Fetch input from mic.
+
         :param lang: str
             default 'en'
+
         :return: str/Bool
             user's voice input as text if true/ false if fail
         """
@@ -70,9 +74,11 @@ class Jarvis:
 
     def text2speech(self, text):
         """
-        Convert any text to speech
+        Convert any text to speech.
+
         :param text: str
             text (String)
+
         :return: Bool
             True / False (Play sound if True otherwise write exception to log and return False)
         """
@@ -91,7 +97,8 @@ class Jarvis:
 
     def cpu(self):
         """
-        Give current CPU and Buttery percent
+        Give current CPU and Buttery percent.
+
         :return: str/bool
         """
         try:
@@ -107,7 +114,9 @@ class Jarvis:
             return False
 
     def greeting(self):
-
+        """
+        Authenticate user. 
+        """
         config = configparser.ConfigParser()
         config.read('./JARVIS/config/config.ini')
         user_name = config['default']['user_name']
@@ -144,7 +153,8 @@ class Jarvis:
 
     def tell_me_date(self):
         """
-        Just return date as string
+        Just return date as string.
+
         :return: str/Bool
             date if success, False if fail
         """
@@ -152,7 +162,8 @@ class Jarvis:
 
     def tell_me_time(self):
         """
-        This function will return time
+        This function will return time.
+
         :return: str/Bool
             Time if success, False if fail
         """
@@ -187,9 +198,11 @@ class Jarvis:
 
     def weather_info(self, city='Vadodara'):
         """
-        Return weather
+        Return weather.
+
         :param city: str
             Any city of this world
+
         :return: str/bool
             weather info as string if True, or False
         """
@@ -203,9 +216,11 @@ class Jarvis:
 
     def launch_any_app(self, path_of_app=r'C:\Program Files\Mozilla Firefox\firefox.exe'):
         """
-        Launch any windows application according to application path
+        Launch any windows application according to application path.
+
         :param path_of_app: str
             path of exe
+
         :return: Bool
             True if success and open the application, False if fail
         """
@@ -213,7 +228,8 @@ class Jarvis:
 
     def shutdown(self):
         """
-        Shutdown the Jarvis API, exit from program
+        Shutdown the Jarvis API, exit from program.
+
         :return: None/bool
             if no error then exit from program, False if Fail
         """
@@ -226,7 +242,8 @@ class Jarvis:
 
     def setup(self):
         """
-        Method to define configuration related to assistant
+        Method to define configuration related to assistant.
+
         :return: Bool
             True if setup done
             False if setup cancel or interrupt
@@ -238,11 +255,14 @@ class Jarvis:
 
     def tell_me(self, topic='India', sentences=1):
         """
-        TIt tells about anything from wikipedia in summary
+        TIt tells about anything from wikipedia in summary.
+
         :param topic: str
             any string is valid options
+
         :param sentences: int
             number of sentence
+
         :return: str
             Summary of topic
         """
