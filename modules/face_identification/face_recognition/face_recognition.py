@@ -185,7 +185,6 @@ class FaceRecognition:
                                 print(e)
                 cv2.imshow("img", img)
                 if found == 1:
-                    print(user_name)
                     break
                 if cv2.waitKey(1) == 13:  # 13 is the Enter Key
                     break

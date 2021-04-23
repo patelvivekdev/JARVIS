@@ -8,6 +8,7 @@ import speech_recognition as sr
 import pyaudio
 import pyttsx3
 import psutil
+import pyautogui
 
 # Import Custom module
 from JARVIS.modules.face_identification import FaceIdentificaion
@@ -18,6 +19,7 @@ from JARVIS.modules.setup import Setup
 from JARVIS.modules.wake_word import WakeWord, DefaultFileNotFound
 from JARVIS.modules.wikipedia import Wikipedia
 from JARVIS.modules.open_app import OpenApp
+from JARVIS.modules.face_identification.face_detection import user
 
 
 class Jarvis:
@@ -63,7 +65,7 @@ class Jarvis:
             try:
                 print('Recognizing.....')
                 command = r.recognize_google(audio, language=lang).lower()
-                print(f'You said: {command} \n')
+                print(f'user said: {command} \n')
             except sr.UnknownValueError:
                 print('....')
                 command = self.mic_input()
@@ -118,7 +120,7 @@ class Jarvis:
         Authenticate user. 
         """
         config = configparser.ConfigParser()
-        config.read('./JARVIS/config/config.ini')
+        config.read(r'./JARVIS/config/config.ini')
         user_name = config['default']['user_name']
 
         username = self.detect_person()
@@ -128,15 +130,15 @@ class Jarvis:
             hour = datetime.datetime.now().hour
             if hour >= 6 and hour < 12:
                 print(f"Good Morning! {user_name}")
-                self.text2speech(f"Good Morning! {user_name}")
+                self.text2speech(f"Good Morning!{user_name}")
                 flag = True
             elif hour >= 12 and hour < 18:
                 print(f"Good Afternoon! {user_name}")
-                self.text2speech(f"Good Afternoon! {user_name}")
+                self.text2speech(f"Good Afternoon!{user_name}")
                 flag = True
             elif hour >= 18 and hour < 24:
                 print(f"Good Evening! {user_name}")
-                self.text2speech(f"Good Evening! {user_name}")
+                self.text2speech(f"Good Evening!{user_name}")
                 flag = True
             else:
                 print("it's time to bad sir ! Good night")
@@ -176,11 +178,36 @@ class Jarvis:
                     height=300,
                     caffemodel_path=r'JARVIS\modules\face_identification\model\res10_300x300_ssd_iter_140000.caffemodel',
                     prototxt_path=r'JARVIS\modules\face_identification\model\deploy.prototxt'):
+        """
+        Info : Dataset Create by face detection with OpenCV SSD.
 
-        obj = FaceIdentificaion()
+        :param dataset_path: str (example: 'path_of_dataset')
+        :param class_name: str (example: 'name_of_user')
+        :param no_of_samples: int (example: 10)
+        :param width: int (example: 300)
+        :param height: int (example: 300)
+        :param caffemodel_path : str (example: 'path_to_caffe_model')
+        :param prototxt: str (example:'path_to_prototxt')
+        :return: None
+        """
 
-        obj.face_detetion(dataset_path, class_name, no_of_samples,
-                          width, height, caffemodel_path, prototxt_path)
+        admin_username = input("Enter Admin username :")
+        admin_password = input("Enter Admin password :")
+
+        try:
+            status, username = user.user_authentication(
+                user_name=admin_username,
+                user_pass=admin_password)
+        except Exception as e:
+            print(e)
+
+        if status:
+            print(f" {username} Authenticated...")
+            user_name = input("Enter name of the new user:")
+            obj = FaceIdentificaion()
+            obj.face_detetion(class_name=user_name)
+        else:
+            print('Username or password is not match! Please try again.')
 
     def detect_person(self, data_path=r'JARVIS\modules\face_identification\data',
                       img_height=224,
@@ -188,7 +215,18 @@ class Jarvis:
                       model_path=r'JARVIS\modules\face_identification\model\model.h5',
                       caffemodel_path=r'JARVIS\modules\face_identification\model\res10_300x300_ssd_iter_140000.caffemodel',
                       prototxt_path=r'JARVIS\modules\face_identification\model\deploy.prototxt'):
+        """
+        Info : Face_Recognition class
 
+        :param data_path : str (example: 'Path_to_Data')
+        :param img_heigth: int (example: 224)
+        :param img_width: int (example: 224)
+        :parma model_path: str (example: 'Path_To_Tensorflow_model')
+        :param caffemodel_path : str (example: 'path_to_caffe_model')
+        :param prototxt: str (example:'path_to_prototxt')
+
+        :return: final person name
+        """
         obj = FaceIdentificaion()
 
         user_name = obj.face_recognition(
@@ -253,7 +291,7 @@ class Jarvis:
         del obj_setup
         return response
 
-    def tell_me(self, topic='India', sentences=1):
+    def tell_me(self, topic='India'):
         """
         TIt tells about anything from wikipedia in summary.
 
@@ -266,8 +304,20 @@ class Jarvis:
         :return: str
             Summary of topic
         """
-        obj = Wikipedia()
-        return obj.tell_me_about(topic, sentences)
+        try:
+            obj = Wikipedia()
+            res = obj.tell_me_about(topic)
+        except Exception as e:
+            print(e)
+            res = False
+        return res
+
+    def screenshot_(self):
+        image = pyautogui.screenshot()
+        date = datetime.datetime.now().strftime("%b-%d")
+        time = datetime.datetime.now().strftime("%I-%M-%S")
+        image.save(
+            f'images\/{date}-{time}.png')
 
 
 if __name__ == '__main__':
