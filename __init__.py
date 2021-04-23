@@ -117,7 +117,7 @@ class Jarvis:
 
     def greeting(self):
         """
-        Authenticate user. 
+        Authenticate user through face identification. 
         """
         config = configparser.ConfigParser()
         config.read(r'./JARVIS/config/config.ini')
@@ -236,7 +236,7 @@ class Jarvis:
 
     def weather_info(self, city='Vadodara'):
         """
-        Return weather.
+        Return weather information about the city.
 
         :param city: str
             Any city of this world
@@ -293,7 +293,7 @@ class Jarvis:
 
     def tell_me(self, topic='India'):
         """
-        TIt tells about anything from wikipedia in summary.
+        Tells about anything from wikipedia in summary.
 
         :param topic: str
             any string is valid options
@@ -313,6 +313,9 @@ class Jarvis:
         return res
 
     def screenshot_(self):
+        """
+        Save the screenshot.
+        """
         image = pyautogui.screenshot()
         date = datetime.datetime.now().strftime("%b-%d")
         time = datetime.datetime.now().strftime("%I-%M-%S")
