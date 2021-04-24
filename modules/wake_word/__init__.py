@@ -46,6 +46,7 @@ class WakeWord:
                 command = r.recognize_google(audio, language=lang).lower()
                 print(command)
                 if re.search(bot_name, command):
+                    print("Wake up")
                     return True, command
                 else:
                     return False, command
