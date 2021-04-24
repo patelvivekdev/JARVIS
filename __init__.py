@@ -19,6 +19,7 @@ from JARVIS.modules.setup import Setup
 from JARVIS.modules.wake_word import WakeWord, DefaultFileNotFound
 from JARVIS.modules.wikipedia import Wikipedia
 from JARVIS.modules.open_app import OpenApp
+from JARVIS.modules.website_open import WebsiteOpen
 from JARVIS.modules.face_identification.face_detection import user
 
 
@@ -252,6 +253,16 @@ class Jarvis:
             print(e)
             res = False
         return res
+
+    def website_opener(self, domain):
+        """
+        This will open website according to domain
+        :param domain: str
+            any domain, example "youtube.com"
+        :return: Bool
+            True if success, False if fail
+        """
+        return WebsiteOpen.website_open.website_opener(domain)
 
     def launch_any_app(self, path_of_app=r'C:\Program Files\Mozilla Firefox\firefox.exe'):
         """
