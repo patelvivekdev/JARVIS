@@ -6,7 +6,7 @@ import pandas as pd
 class FaceDetection:
     def __init__(self, dataset_path=r'JARVIS\modules\face_identification\data',
                  class_name='demo',
-                 no_of_samples=10,
+                 no_of_samples=5,
                  width=300,
                  height=300,
                  caffemodel_path=r'JARVIS\modules\face_identification\model\res10_300x300_ssd_iter_140000.caffemodel',
@@ -16,7 +16,7 @@ class FaceDetection:
 
         :param dataset_path: str (example: 'path_of_dataset')
         :param class_name: str (example: 'name_of_user')
-        :param no_of_samples: int (example: 10)
+        :param no_of_samples: int (example: 5)
         :param width: int (300)
         :param height: int (300)
         :param caffemodel_path : str (example: 'path_to_caffe_model')
