@@ -150,6 +150,8 @@ class Jarvis:
                 print("checking functionality")
                 self.text2speech("checking functionality")
                 self.cpu()
+                print("How may i help you today?")
+                self.text2speech("How may i help you today?")
         else:
             print('user unauthenticated')
             self.text2speech('user unauthenticated')
@@ -262,7 +264,7 @@ class Jarvis:
         :return: Bool
             True if success, False if fail
         """
-        return WebsiteOpen.website_open.website_opener(domain)
+        return WebsiteOpen.website_opener(domain)
 
     def launch_any_app(self, path_of_app=r'C:\Program Files\Mozilla Firefox\firefox.exe'):
         """
