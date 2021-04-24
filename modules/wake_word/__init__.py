@@ -17,7 +17,7 @@ class WakeWord:
     def __init__(self):
         pass
 
-    def Wake_word(self, lang='en'):
+    def Wake_word(self, lang='en-in'):
         """
         Hot word (wake word / background listen) detection
         What is Hot word detection?
@@ -25,7 +25,7 @@ class WakeWord:
         Voice interfaces use speech recognition technologies to allow user input through spoken commands.
         You can set your custom HOT WORD just by calling setup(). Your bot_name is your Hot word
         :param lang: str
-            default 'en'
+            default 'en-in'
         :return: Bool, str
             status, command
         """
@@ -40,6 +40,8 @@ class WakeWord:
             with sr.Microphone() as source:
                 print("Background listening")
                 r.pause_threshold = 1
+                r.energy_threshold = 494
+                r.adjust_for_ambient_noise(source, duration=1.5)
                 audio = r.listen(source)
                 command = r.recognize_google(audio, language=lang).lower()
                 print(command)

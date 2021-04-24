@@ -46,12 +46,12 @@ class Jarvis:
             status = command = False
         return status, command
 
-    def mic_input(self, lang='en'):
+    def mic_input(self, lang='en-in'):
         """
         Fetch input from mic.
 
         :param lang: str
-            default 'en'
+            default 'en-in'
 
         :return: str/Bool
             user's voice input as text if true/ false if fail
@@ -61,6 +61,7 @@ class Jarvis:
             with sr.Microphone() as source:
                 print('listening.....')
                 r.pause_threshold = 1
+                r.adjust_for_ambient_noise(source, duration=1.5)
                 audio = r.listen(source)
             try:
                 print('Recognizing.....')
