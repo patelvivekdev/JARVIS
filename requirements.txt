@@ -112,7 +112,7 @@ soupsieve==2.2.1
 SpeechRecognition==3.8.1
 tensorboard @ file:///home/builder/ktietz/aggregate/tensorflow_recipes/ci_te/tensorboard_1614593728657/work/tmp_pip_dir
 tensorboard-plugin-wit==1.6.0
-tensorflow==2.4.0
+tensorflow==2.5.0
 tensorflow-estimator @ file:///tmp/build/80754af9/tensorflow-estimator_1599136169057/work/whl_temp/tensorflow_estimator-2.3.0-py2.py3-none-any.whl
 termcolor==1.1.0
 terminado==0.9.4
