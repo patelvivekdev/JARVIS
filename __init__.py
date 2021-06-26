@@ -207,7 +207,7 @@ class Jarvis:
 
         if status:
             print(f" {username} Authenticated...")
-            user_name = input("Enter name of the new user:")
+            user_name = input("Enter name of the new user: ")
             obj = FaceIdentificaion()
             obj.face_detetion(class_name=user_name)
         else:
